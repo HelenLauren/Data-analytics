@@ -1,0 +1,9 @@
+# Spark Structured Streaming
+streaming_demo/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Jupyter
+.ipynb_checkpoints/
