@@ -10,17 +10,25 @@ Healthcare systems face challenges related to hospital readmissions, particularl
 
 This project investigates demographic, clinical, and hospital utilization factors associated with readmission within 30 days after discharge among patients with diabetes.
 
-### Research Question
+### Research Questions
 
-**Which factors are associated with hospital readmissions within 30 days after discharge among patients with diabetes?**
+**Central Question:**
+- Which demographic, clinical, and hospitalization factors are associated with hospital readmissions within 30 days after discharge among patients with diabetes?
+
+**Specific Analytical Questions:**
+1. How does the length of hospital stay (`time_in_hospital`) relate to early readmission rates (<30 days)?
+2. To what extent does a patient's prior healthcare utilization history (`number_inpatient`, `number_emergency`, `number_outpatient`) indicate a higher likelihood of readmission?
+3. Does modification of medication regimens during hospitalization (`change`, `diabetesMed`, `insulin`) correlate with readmission risk?
+4. Are there significant disparities in readmission patterns across different age brackets (`age`) and primary diagnostic categories (`diag_1`)?
 
 ### Objectives
 
-- Understand the characteristics of the hospital encounter dataset.
-- Assess data quality and identify missing values, duplicates, and inconsistent data types.
-- Clean and prepare the dataset for subsequent analytical stages.
-- Investigate factors potentially associated with hospital readmissions.
-- Establish a foundation for predictive analytics in future project stages.
+- Understand the structure and characteristics of the hospital encounter dataset.
+- Ingest the dataset reproducibly from external repositories.
+- Assess data quality systematically (missing value representation, duplicate records, inappropriate types, categorical inconsistencies).
+- Clean, standardize, and prepare a trustworthy dataset for downstream transformations and modeling.
+- Export the resulting prepared dataset with documented quality metrics, keeping analytical aggregations and modeling for subsequent stages as required by the course guidelines.
+- Demonstrate real-time stream ingestion and temporal window aggregations using Apache Spark Structured Streaming.
 
 ## 2. Dataset
 
@@ -170,10 +178,13 @@ The repository is organized around the project documentation, notebook, and depe
 Data-analytics/
 ├── README.md
 ├── requirements.txt
-└── HealthData.ipynb
+├── HealthData.ipynb
+└── data/
+    └── processed/
+        └── diabetic_data_clean.csv
 ```
 
-Replace `HealthData.ipynb` with the actual notebook filename committed to the repository. Additional folders, such as `data/processed/`, can be included when the prepared dataset is generated and saved.
+The prepared dataset `diabetic_data_clean.csv` is exported after the cleaning and validation steps in `HealthData.ipynb`, ensuring that the resulting data is ready for downstream analytical pipelines.
 
 ## 8. Project Deliverables
 
