@@ -3,3 +3,5 @@ numpy
 matplotlib
 kagglehub[pandas-datasets]
 pyspark
+scikit-learn
+jupyterlab
