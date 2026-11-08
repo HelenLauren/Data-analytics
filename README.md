@@ -12,7 +12,7 @@ As análises são exploratórias e educacionais. Os dados são históricos e obs
 |---|---|---|
 | RA1 — Ingestão e preparação | Aquisição, inspeção da qualidade, padronização de ausências, limpeza, validação e exportação da base preparada. | `HealthData.ipynb` |
 | RA2 — Streaming | Demonstração local com Apache Spark Structured Streaming, arquivos JSON simulados e agregação em janelas temporais. | Seção de streaming em `HealthData.ipynb` e arquivo de apoio em `docs/HealthDataRA2.pdf` |
-| RA3 — Análise e aprendizado de máquina | Estatísticas descritivas, gráficos interpretados e modelos de classificação por Regressão Logística. | `notebooks/RA3_Analysis_MachineLearning.ipynb` |
+| RA3 — Análise e aprendizado de máquina | Estatísticas descritivas, gráficos interpretados e classificação por Regressão Logística. | `notebooks/RA3_Analysis_MachineLearning.ipynb` |
 
 ## Dados
 
@@ -44,16 +44,18 @@ As perguntas definidas na etapa inicial investigam a relação entre readmissão
 
 O notebook `notebooks/RA3_Analysis_MachineLearning.ipynb` analisa a base preparada. A variável-alvo é `readmitido_30_dias`: 90.409 registros (88,84%) sem readmissão precoce e 11.357 (11,16%) com readmissão precoce. O notebook calcula frequências, médias, medianas, desvios-padrão e taxas por grupo; também produz visualizações por duração da internação, faixa etária, uso de serviços, medicamentos e diagnóstico principal.
 
-Para a previsão, a RA3 formula um problema de classificação binária e compara Regressão Logística original com uma versão que usa `class_weight="balanced"`. As variáveis categóricas são convertidas em indicadores one-hot, e os modelos são avaliados em um conjunto de teste separado. Resultados registrados para o modelo balanceado:
+Para a previsão, a RA3 formula um problema de classificação binária e utiliza um único Pipeline de Regressão Logística com `class_weight="balanced"`. As variáveis numéricas recebem imputação pela mediana e padronização; as categóricas recebem imputação pela categoria mais frequente e codificação one-hot. Os dados são separados em treino e teste (80/20, com estratificação e `random_state=42`). O parâmetro de pesos aumenta a contribuição da classe minoritária no treinamento, sem reamostrar os registros nem alterar a distribuição original dos dados.
+
+Resultados oficiais no conjunto de teste:
 
 | Métrica da classe de readmissão | Resultado |
 |---|---:|
-| Acurácia | 65,01% |
-| Precisão | 16,83% |
-| Revocação | 54,21% |
-| F1-score | 0,2569 |
+| Acurácia | 64,97% |
+| Precisão | 16,75% |
+| Revocação (Recall) | 53,90% |
+| F1-score | 0,2556 |
 
-A revocação indica que pouco mais da metade das readmissões reais no teste foi identificada, enquanto a precisão baixa reflete muitos falsos positivos. O balanceamento trouxe apenas ganhos marginais em relação ao modelo original. Os resultados devem ser interpretados considerando o desequilíbrio entre classes, os dados ausentes, o período histórico (1999–2008), o contexto de hospitais dos Estados Unidos e a possível repetição de pacientes.
+Na matriz de confusão `[[12001, 6082], [1047, 1224]]`, há 12.001 verdadeiros negativos, 6.082 falsos positivos, 1.047 falsos negativos e 1.224 verdadeiros positivos. O modelo identifica aproximadamente 53,9% das readmissões em até 30 dias, porém sua precisão é baixa e há muitos falsos positivos. A acurácia de 64,97% ficou abaixo da referência ingênua de 88,84%, obtida ao prever sempre a classe majoritária. Portanto, a acurácia isolada não sugere bom desempenho. O modelo troca acertos globais por capacidade de identificar parte dos casos positivos. As versões de NumPy, Pandas, SciPy e scikit-learn usadas para reproduzir essas métricas estão fixadas em `requirements.txt`. Os resultados exigem cautela diante do desequilíbrio das classes, dos dados ausentes, do período histórico (1999–2008), do contexto dos hospitais dos Estados Unidos e da possível repetição de pacientes.
 
 ## Como executar
 
@@ -96,8 +98,8 @@ Se o comando `jupyter` não estiver disponível, instale JupyterLab no ambiente 
 
 1. Confirme que `data/processed/diabetic_data_clean.csv` existe. O notebook RA3 procura esse caminho relativo à raiz do repositório ou a partir da pasta `notebooks`.
 2. Abra `notebooks/RA3_Analysis_MachineLearning.ipynb`.
-3. Execute as células em ordem. Os gráficos são exibidos no notebook; as células finais apresentam métricas e matrizes de confusão dos classificadores.
-4. Confira a leitura inicial da base (101.766 linhas e 48 colunas), a distribuição da variável-alvo, as visualizações, as métricas de teste e a matriz do classificador balanceado `[[12001, 6082], [1040, 1231]]` (linhas = classe real; colunas = prevista).
+3. Execute as células em ordem. Os gráficos são exibidos no notebook; as células finais apresentam as métricas e a matriz de confusão do classificador principal.
+4. Confira a leitura inicial da base (101.766 linhas e 48 colunas), a distribuição da variável-alvo, as visualizações, as métricas de teste e a matriz do modelo principal `[[12001, 6082], [1047, 1224]]` (linhas = classe real; colunas = prevista).
 
 ## Estrutura do repositório
 
@@ -141,7 +143,7 @@ Os PDFs fornecidos para as três etapas estão em `docs/`:
 ## Entregáveis e verificações
 
 - `HealthData.ipynb`: ingestão, qualidade, preparação e demonstração do fluxo Spark.
-- `notebooks/RA3_Analysis_MachineLearning.ipynb`: análises descritivas, gráficos, treinamento e avaliação dos classificadores.
+- `notebooks/RA3_Analysis_MachineLearning.ipynb`: análises descritivas, gráficos, treinamento e avaliação do classificador principal.
 - `data/processed/diabetic_data_clean.csv`: base preparada para as análises posteriores.
 - `docs/`: documentação em PDF das três etapas do trabalho.
 
