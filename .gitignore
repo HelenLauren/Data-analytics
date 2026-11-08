@@ -1,9 +1,23 @@
-# Spark Structured Streaming
-streaming_demo/
-
 # Python
 __pycache__/
 *.py[cod]
-
-# Jupyter
 .ipynb_checkpoints/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Spark streaming checkpoints
+streaming_demo/checkpoint/
+
+# Temporary streaming input
+streaming_demo/input/
+
+# Operating system
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.log
+*.tmp
